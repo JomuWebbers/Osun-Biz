@@ -120,4 +120,8 @@ The first phase installs Laravel 13 and Breeze authentication at the repository 
 
 The seed command creates the eight starter categories and ten Osun towns. It does not create an administrator account.
 
+## Phase 2 public discovery
+
+The public homepage, searchable directory, town/category pages, business details, and public review pages are backed by the database. Public pages show approved businesses and approved reviews only; wireframe example listings are not presented as live data. Search supports a keyword, town, category, and sort order. Owner submission, review creation, and admin moderation are not part of this phase.
+
 `Dockerfile` and `render.yaml` are intentionally deferred to Phase 6.
