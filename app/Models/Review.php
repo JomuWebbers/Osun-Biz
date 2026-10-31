@@ -1,43 +1,37 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
-/**
- * Review model.
- * Represents a customer review for a business.
- */
-class Review
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+#[Fillable([
+    'business_id',
+    'user_id',
+    'rating',
+    'comment',
+    'status',
+    'owner_reply',
+    'owner_replied_at',
+])]
+class Review extends Model
 {
-    public int $id;
-    public int $businessId;
-    public int $userId;
-    public int $rating;
-    public ?string $comment;
-    public string $status;
-    public string $createdAt;
-    public string $updatedAt;
-
-    public function __construct(array $data)
+    protected function casts(): array
     {
-        $this->id = (int) $data['id'];
-        $this->businessId = (int) $data['business_id'];
-        $this->userId = (int) $data['user_id'];
-        $this->rating = (int) $data['rating'];
-        $this->comment = $data['comment'] ?? null;
-        $this->status = (string) $data['status'];
-        $this->createdAt = (string) $data['created_at'];
-        $this->updatedAt = (string) $data['updated_at'];
+        return [
+            'rating' => 'integer',
+            'owner_replied_at' => 'datetime',
+        ];
     }
 
-    public function isApproved(): bool
+    public function business(): BelongsTo
     {
-        return $this->status === 'approved';
+        return $this->belongsTo(Business::class);
     }
 
-    public function isReported(): bool
+    public function user(): BelongsTo
     {
-        return $this->status === 'reported';
+        return $this->belongsTo(User::class);
     }
 }

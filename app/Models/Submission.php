@@ -1,48 +1,39 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
-/**
- * Submission model.
- * Represents a pending business listing submission awaiting admin approval.
- */
-class Submission
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+#[Fillable([
+    'user_id',
+    'business_data',
+    'status',
+    'admin_reason',
+    'reviewed_by',
+    'reviewed_at',
+])]
+class Submission extends Model
 {
-    public int $id;
-    public int $userId;
-    public array $businessData;
-    public string $status;
-    public ?string $adminReason;
-    public ?int $reviewedBy;
-    public ?string $reviewedAt;
-    public string $createdAt;
+    public $timestamps = false;
 
-    public function __construct(array $data)
+    protected function casts(): array
     {
-        $this->id = (int) $data['id'];
-        $this->userId = (int) $data['user_id'];
-        $this->businessData = is_array($data['business_data']) ? $data['business_data'] : json_decode((string) $data['business_data'], true);
-        $this->status = (string) $data['status'];
-        $this->adminReason = $data['admin_reason'] ?? null;
-        $this->reviewedBy = $data['reviewed_by'] ?? null;
-        $this->reviewedAt = $data['reviewed_at'] ?? null;
-        $this->createdAt = (string) $data['created_at'];
+        return [
+            'business_data' => 'array',
+            'reviewed_at' => 'datetime',
+            'created_at' => 'datetime',
+        ];
     }
 
-    public function isPending(): bool
+    public function user(): BelongsTo
     {
-        return $this->status === 'pending';
+        return $this->belongsTo(User::class);
     }
 
-    public function isApproved(): bool
+    public function reviewer(): BelongsTo
     {
-        return $this->status === 'approved';
-    }
-
-    public function isRejected(): bool
-    {
-        return $this->status === 'rejected';
+        return $this->belongsTo(User::class, 'reviewed_by');
     }
 }

@@ -1,64 +1,67 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
-/**
- * Business model.
- * Represents a business listing in the OsunBiz directory.
- */
-class Business
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+#[Fillable([
+    'owner_id',
+    'category_id',
+    'location_id',
+    'name',
+    'slug',
+    'description',
+    'address',
+    'phone',
+    'email',
+    'website',
+    'status',
+    'rating',
+    'review_count',
+])]
+class Business extends Model
 {
-    public int $id;
-    public int $ownerId;
-    public int $categoryId;
-    public int $locationId;
-    public string $name;
-    public string $slug;
-    public ?string $description;
-    public ?string $address;
-    public ?string $phone;
-    public ?string $email;
-    public ?string $website;
-    public string $status;
-    public float $rating;
-    public int $reviewCount;
-    public string $createdAt;
-    public string $updatedAt;
+    use HasFactory;
 
-    public function __construct(array $data)
+    protected function casts(): array
     {
-        $this->id = (int) $data['id'];
-        $this->ownerId = (int) $data['owner_id'];
-        $this->categoryId = (int) $data['category_id'];
-        $this->locationId = (int) $data['location_id'];
-        $this->name = (string) $data['name'];
-        $this->slug = (string) $data['slug'];
-        $this->description = $data['description'] ?? null;
-        $this->address = $data['address'] ?? null;
-        $this->phone = $data['phone'] ?? null;
-        $this->email = $data['email'] ?? null;
-        $this->website = $data['website'] ?? null;
-        $this->status = (string) $data['status'];
-        $this->rating = (float) ($data['rating'] ?? 0.0);
-        $this->reviewCount = (int) ($data['review_count'] ?? 0);
-        $this->createdAt = (string) $data['created_at'];
-        $this->updatedAt = (string) $data['updated_at'];
+        return [
+            'rating' => 'decimal:2',
+            'review_count' => 'integer',
+        ];
     }
 
-    public function isApproved(): bool
+    public function owner(): BelongsTo
     {
-        return $this->status === 'approved';
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function isPending(): bool
+    public function category(): BelongsTo
     {
-        return $this->status === 'pending';
+        return $this->belongsTo(Category::class);
     }
 
-    public function isRejected(): bool
+    public function location(): BelongsTo
     {
-        return $this->status === 'rejected';
+        return $this->belongsTo(Location::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(BusinessImage::class);
+    }
+
+    public function hours(): HasMany
+    {
+        return $this->hasMany(BusinessHour::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 }

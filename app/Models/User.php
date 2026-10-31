@@ -1,64 +1,48 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
-/**
- * User model.
- * Represents a customer, business owner, or administrator.
- */
-class User
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+#[Fillable(['name', 'email', 'password', 'role', 'status'])]
+#[Hidden(['password', 'remember_token'])]
+class User extends Authenticatable
 {
-    public int $id;
-    public string $name;
-    public string $email;
-    public string $passwordHash;
-    public string $role;
-    public string $status;
-    public ?string $emailVerifiedAt;
-    public ?string $emailVerificationToken;
-    public ?string $passwordResetToken;
-    public string $createdAt;
-    public string $updatedAt;
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, Notifiable;
 
-    public function __construct(array $data)
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
     {
-        $this->id = (int) $data['id'];
-        $this->name = (string) $data['name'];
-        $this->email = (string) $data['email'];
-        $this->passwordHash = (string) $data['password_hash'];
-        $this->role = (string) $data['role'];
-        $this->status = (string) $data['status'];
-        $this->emailVerifiedAt = $data['email_verified_at'] ?? null;
-        $this->emailVerificationToken = $data['email_verification_token'] ?? null;
-        $this->passwordResetToken = $data['password_reset_token'] ?? null;
-        $this->createdAt = (string) $data['created_at'];
-        $this->updatedAt = (string) $data['updated_at'];
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
     }
 
-    public function isAdmin(): bool
+    public function businesses(): HasMany
     {
-        return $this->role === 'admin';
+        return $this->hasMany(Business::class, 'owner_id');
     }
 
-    public function isOwner(): bool
+    public function reviews(): HasMany
     {
-        return $this->role === 'owner';
+        return $this->hasMany(Review::class);
     }
 
-    public function isCustomer(): bool
+    public function submissions(): HasMany
     {
-        return $this->role === 'customer';
-    }
-
-    public function isActive(): bool
-    {
-        return $this->status === 'active';
-    }
-
-    public function isEmailVerified(): bool
-    {
-        return $this->emailVerifiedAt !== null;
+        return $this->hasMany(Submission::class);
     }
 }

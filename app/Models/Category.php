@@ -1,26 +1,25 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
-/**
- * Category model.
- */
-class Category
-{
-    public int $id;
-    public string $name;
-    public string $slug;
-    public ?string $description;
-    public string $createdAt;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-    public function __construct(array $data)
+#[Fillable(['name', 'slug', 'description'])]
+class Category extends Model
+{
+    public $timestamps = false;
+
+    protected function casts(): array
     {
-        $this->id = (int) $data['id'];
-        $this->name = (string) $data['name'];
-        $this->slug = (string) $data['slug'];
-        $this->description = $data['description'] ?? null;
-        $this->createdAt = (string) $data['created_at'];
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
+
+    public function businesses(): HasMany
+    {
+        return $this->hasMany(Business::class);
     }
 }

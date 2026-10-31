@@ -1,26 +1,25 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Models;
 
-/**
- * Location (town) model.
- */
-class Location
-{
-    public int $id;
-    public string $name;
-    public string $slug;
-    public string $state;
-    public string $createdAt;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-    public function __construct(array $data)
+#[Fillable(['name', 'slug', 'state'])]
+class Location extends Model
+{
+    public $timestamps = false;
+
+    protected function casts(): array
     {
-        $this->id = (int) $data['id'];
-        $this->name = (string) $data['name'];
-        $this->slug = (string) $data['slug'];
-        $this->state = (string) ($data['state'] ?? 'Osun');
-        $this->createdAt = (string) $data['created_at'];
+        return [
+            'created_at' => 'datetime',
+        ];
+    }
+
+    public function businesses(): HasMany
+    {
+        return $this->hasMany(Business::class);
     }
 }
