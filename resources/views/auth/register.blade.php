@@ -1,10 +1,15 @@
 <x-guest-layout>
+    <div class="mb-6">
+        <h1 class="text-xl font-semibold text-gray-800">{{ __('Create an owner account') }}</h1>
+        <p class="mt-1 text-sm text-gray-600">{{ __('Create your account to submit and manage business listings. Listings are reviewed before they go live.') }}</p>
+    </div>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
         <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" :value="__('Full name')" />
             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
@@ -45,7 +50,7 @@
             </a>
 
             <x-primary-button class="ms-4">
-                {{ __('Register') }}
+                {{ __('Create owner account') }}
             </x-primary-button>
         </div>
     </form>

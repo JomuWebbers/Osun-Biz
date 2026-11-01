@@ -124,4 +124,8 @@ The seed command creates the eight starter categories and ten Osun towns. It doe
 
 The public homepage, searchable directory, town/category pages, business details, and public review pages are backed by the database. Public pages show approved businesses and approved reviews only; wireframe example listings are not presented as live data. Search supports a keyword, town, category, and sort order. Owner submission, review creation, and admin moderation are not part of this phase.
 
+## Phase 3 owner accounts and submissions
+
+New registrations create active owner accounts and require email verification before owner pages are available. Owners can manage their own dashboard and profile, submit business listings, revise pending or rejected submissions, and request moderated changes to their approved listings. Submissions remain private and pending until approved; owners cannot edit another account's records. Optional logo, cover, and gallery uploads are stored on Laravel's local private disk until administrator approval. Administrator moderation is implemented in a later phase.
+
 `Dockerfile` and `render.yaml` are intentionally deferred to Phase 6.

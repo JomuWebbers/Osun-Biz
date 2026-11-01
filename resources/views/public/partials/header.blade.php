@@ -16,7 +16,11 @@
 
         <div class="ml-auto hidden items-center gap-3 md:flex">
             @auth
-                <a href="{{ route('dashboard') }}" class="text-sm font-semibold text-stone-700 hover:text-emerald-800">My account</a>
+                @if (auth()->user()->role === 'owner')
+                    <a href="{{ route('owner.dashboard') }}" class="text-sm font-semibold text-stone-700 hover:text-emerald-800">Owner dashboard</a>
+                @else
+                    <a href="{{ route('profile.edit') }}" class="text-sm font-semibold text-stone-700 hover:text-emerald-800">My account</a>
+                @endif
             @else
                 <a href="{{ route('login') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-100">Log in</a>
                 <a href="{{ route('register') }}" class="rounded-lg bg-emerald-800 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-900">List your business</a>
@@ -32,7 +36,11 @@
                 <a href="{{ route('home') }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-stone-50">Home</a>
                 <a href="{{ route('directory.index') }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-stone-50">Browse businesses</a>
                 @auth
-                    <a href="{{ route('dashboard') }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-stone-50">My account</a>
+                    @if (auth()->user()->role === 'owner')
+                        <a href="{{ route('owner.dashboard') }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-stone-50">Owner dashboard</a>
+                    @else
+                        <a href="{{ route('profile.edit') }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-stone-50">My account</a>
+                    @endif
                 @else
                     <a href="{{ route('login') }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-stone-50">Log in</a>
                     <a href="{{ route('register') }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-emerald-800 hover:bg-emerald-50">List your business</a>

@@ -23,9 +23,17 @@ class RegistrationTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'role' => 'admin',
+            'status' => 'suspended',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect(route('verification.notice', absolute: false));
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@example.com',
+            'role' => 'owner',
+            'status' => 'active',
+            'email_verified_at' => null,
+        ]);
     }
 }
